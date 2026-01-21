@@ -8,6 +8,7 @@
 # --- config ---
 WALLPAPER_DIR="/path/to/directory"
 
-IMAGE=${find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" \) | shuf -n 1)
+IMAGE=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" \) | shuf -n 1)
 
 pcmanfm --set-wallpaper="$IMAGE"
+
