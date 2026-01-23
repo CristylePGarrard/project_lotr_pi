@@ -13,3 +13,9 @@ Here's a breakdown of its components:
 - \e[0m: Resets text formatting back to default (turns off the color).
 - \W: Shows the basename (last part) of the current working directory (e.g., ~ for home, docs for /home/user/docs).
 - \$: Displays a $ if you're a normal user, or a # if you're the root user (super-user), indicating the prompt level.
+
+this is better 
+```bash
+# --- Middle-earth Colors ---
+export PS1='\[\e[38;5;94m\]\u@\h \[\e[38;5;136m\]\w \[\e[38;5;58m\]❯ \[\e[0m\]'
+```
