@@ -130,13 +130,15 @@ class ShireClock:
             self.center - self.radius,
             self.center + self.radius,
             self.center + self.radius,
-            start=247,
+            start=247,  # your adjusted angle
             extent=extent,
             fill=FILL_COLOR,
             outline="",
             style=tk.PIESLICE,
-            tags="dynamic"
+            tags=("dynamic", "fill")
         )
+
+        self.canvas.tag_lower("fill")
 
         # ----- Day progress hand -----
         angle = (now_minutes / (24 * 60)) * 2 * math.pi - math.pi / 2
