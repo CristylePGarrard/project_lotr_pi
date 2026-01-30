@@ -1,0 +1,9 @@
+#!/bin/bash
+
+figlet "Middle Earth" | lolcat
+echo ""
+echo " Elen Sila Lumenn' omentielvo"
+echo " ---------------------------"
+echo " The road goes ever on and on...."
+echo ""
+echo " --- Imladris Terminal ---"

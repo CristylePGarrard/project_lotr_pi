@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Shire Music</title>
+	<style>
+		body {
+			background: #1b2b1b;
+			color: #e6e2c5;
+			font-family: serif;
+			text-align: center;
+			margin-top: 10vh;
+		}
+		button {
+			font-size:1.2em;
+			padding: 1em 2em;
+			background: #3c5a3c;
+			color: #fff;
+			border: none;
+			border-radius: 10px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<h1>Welcome to the Shire!</h1>
+	<p>Press button to play music</p>
+	<button onclick="start()">Begin</button>
+
+	<iframe id="strudel"
+		scr="https://strudel.cc/"
+		style="width:100vw; height:80vw; border:none; display:none;">
+	</iframe>
+	<script>
+		async function start() {
+			document.querySelector("button").style.display = "none";
+			document.querySelector("iframe").style.display = "block";
+
+			await new Promise(r => setTimeout(r, 4000));
+
+			const code = await fetch("shire_music.js").then(r => r.text());
+			document.getElementById("strudel").contentWindow.editor.setValue(code)
+			document.getElementById("strudel").contentWindow.play();
+		}
+	</script>
+
+
+
+</body>
+</html>

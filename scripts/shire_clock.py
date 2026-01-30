@@ -1,8 +1,8 @@
-import tkinter as tk
-import math
-from datetime import datetime
+#!/usr/bin/env python3
 
-# ------------------ CONFIG ------------------
+import tkinter as tk
+from datetime import datetime
+import math
 
 WINDOW_SIZE = 420
 BG_COLOR = "#f4ecd8"     # parchment
@@ -37,15 +37,15 @@ class ShireClock:
         self.root = root
         root.title("Mealtime in the Shire")
         root.geometry(f"{WINDOW_SIZE}x{WINDOW_SIZE}")
-        root.resizable(False, False)
+        root.resizable(False,False)
 
         self.canvas = tk.Canvas(
-            root,
-            width=WINDOW_SIZE,
-            height=WINDOW_SIZE,
-            bg=BG_COLOR,
-            highlightthickness=0
-        )
+                root,
+                width=WINDOW_SIZE,
+                height=WINDOW_SIZE,
+                bg=BG_COLOR,
+                highlightthickness=0
+                )
         self.canvas.pack()
 
         self.center = WINDOW_SIZE // 2
@@ -142,20 +142,19 @@ class ShireClock:
         angle = (now_minutes / (24 * 60)) * 2 * math.pi - math.pi / 2
 
         hx = self.center + self.radius * math.cos(angle)
-        hy = self.center + self.radius * math.sin(angle)
+        hy = self.center - self.radius * math.sin(angle)
 
         self.canvas.create_line(
-            self.center,
-            self.center,
-            hx,
-            hy,
-            fill=HAND_COLOR,
-            width=4,
-            capstyle=tk.ROUND,
-            tags="dynamic"
-        )
-
-        # Center dot
+                self.center,
+                self.center,
+                hx,
+                hy,
+                fill=HAND_COLOR,
+                width=4,
+                capstyle=tk.ROUND,
+                tags="dynamic"
+                )
+        # center dot
         self.canvas.create_oval(
             self.center - 4,
             self.center - 4,
