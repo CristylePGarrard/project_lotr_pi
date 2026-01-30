@@ -10,6 +10,7 @@ INK_COLOR = "#3b2f2f"    # dark ink
 FADED_COLOR = "#8a7f6a"  # faded ink
 HAND_COLOR = "#b59b4c"   # soft gold
 FILL_COLOR = "#cfe3c1"   # pale Shire green
+LIGHTER_GREEN = "#d8e6cc" # lighter green
 
 MEALS = [
     (0, 0, "Sleepy Time", "?"),
@@ -130,11 +131,12 @@ class ShireClock:
             self.center - self.radius,
             self.center + self.radius,
             self.center + self.radius,
-            start=247,  # your adjusted angle
+            start=237,  # your adjusted angle
             extent=extent,
-            fill=FILL_COLOR,
+            fill=LIGHTER_GREEN,
             outline="",
             style=tk.PIESLICE,
+            stipple="gray50",
             tags=("dynamic", "fill")
         )
 
