@@ -131,7 +131,7 @@ class ShireClock:
             self.center - self.radius,
             self.center + self.radius,
             self.center + self.radius,
-            start=237,  # your adjusted angle
+            start=extent - 90,  # 237 your adjusted angle
             extent=extent,
             fill=LIGHTER_GREEN,
             outline="",
