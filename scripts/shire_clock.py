@@ -5,38 +5,37 @@ from datetime import datetime
 import math
 
 WINDOW_SIZE = 420
-BG_COLOR = "#F4ECDF" # parchment
-INK_COLOR = "#012E34" # dark ink
-HAND_COLOR = "#556B00" # soft gold
-FADED_COLOR = '#8a7f6a' # faded ink
-SUN_COLOR = "#d4b25c" # warm sun gold
-STAR_COLOR = "#8faecb" # soft starlight
-
-
+BG_COLOR = "#f4ecd8"     # parchment
+INK_COLOR = "#3b2f2f"    # dark ink
+FADED_COLOR = "#8a7f6a"  # faded ink
+HAND_COLOR = "#b59b4c"   # soft gold
+FILL_COLOR = "#cfe3c1"   # pale Shire green
 
 MEALS = [
-        (7, 0, "Breakfast", "Mereth Amanie"),
-        (9, 0, "Second Breakfast", "Mereth Attea"),
-        (11, 0, "Elevenses", "Lomie Melme"),
-        (13, 0, "Luncheon", "Mereth Andune"),
-        (16, 0, "Afternoon Tea", "Sura Lomie"),
-        (18, 0, "Dinner", "Mereth Nura"),
-        (21, 0, "Supper", "Lomelindi")
-        ]
+    (0, 0, "Sleepy Time", "?"),
+    (7, 0, "Breakfast", "Mereth Amanië"),
+    (9, 0, "Second Breakfast", "Mereth Attëa"),
+    (11, 0, "Elevenses", "Lómië Melmë"),
+    (13, 0, "Luncheon", "Mereth Andúnë"),
+    (16, 0, "Afternoon Tea", "Súra Lómië"),
+    (18, 0, "Dinner", "Mereth Núra"),
+    (21, 0, "Supper", "Lómelindi"),
+]
 
-# -------------- logic --------------
+# ------------------ LOGIC ------------------
+
 def minutes_since_midnight(now):
-    return now.hour *60 + now.minute
+    return now.hour * 60 + now.minute
 
-def meal_minutes(h,m):
-    return h* 60 + m
+def meal_minutes(h, m):
+    return h * 60 + m
 
-# ----------------ui-----------------
+# ------------------ UI ------------------
 
 class ShireClock:
     def __init__(self, root):
         self.root = root
-        root.title("Mealtime")
+        root.title("Mealtime in the Shire")
         root.geometry(f"{WINDOW_SIZE}x{WINDOW_SIZE}")
         root.resizable(False,False)
 
@@ -49,76 +48,98 @@ class ShireClock:
                 )
         self.canvas.pack()
 
-        self.center = WINDOW_SIZE //2
+        self.center = WINDOW_SIZE // 2
         self.radius = WINDOW_SIZE // 2 - 50
-        
+
         self.meal_labels = []
 
         self.draw_static()
         self.draw_meals()
         self.update_clock()
 
-# ------------static drawing ----------
+    # ---------- STATIC DRAWING ----------
+
     def draw_static(self):
-        # outer circle
         self.canvas.create_oval(
-                self.center - self.radius,
-                self.center - self.radius,
-                self.center + self.radius,
-                self.center + self.radius,
-                outline=INK_COLOR,
-                width=3
-                )
-        # Title
+            self.center - self.radius,
+            self.center - self.radius,
+            self.center + self.radius,
+            self.center + self.radius,
+            outline=INK_COLOR,
+            width=3
+        )
+
         self.canvas.create_text(
-                self.center,
-                28,
-                text="Meal Time",
-                fill=INK_COLOR,
-                width=3
-                )
+            self.center,
+            28,
+            text="Mealtime in the Shire",
+            fill=INK_COLOR,
+            font=("Serif", 16, "italic")
+        )
 
     def draw_meals(self):
-        for h,m,name, elvish in MEALS:
+        for h, m, name, elvish in MEALS:
             minutes = meal_minutes(h, m)
-            angle = (minutes / (24*60)) * 2 * math.pi - math.pi/2
+            angle = (minutes / (24 * 60)) * 2 * math.pi - math.pi / 2
+
             x = self.center + (self.radius - 20) * math.cos(angle)
             y = self.center + (self.radius - 20) * math.sin(angle)
 
             label = self.canvas.create_text(
-                    x, y,
-                    text=name,
-                    fill=FADED_COLOR,
-                    font=("Serif", 19),
-                    tags="meal"
-                    )
+                x, y,
+                text=name,
+                fill=FADED_COLOR,
+                font=("Serif", 10),
+                tags="meal"
+            )
+
             self.meal_labels.append((minutes, label))
 
-    # ---------- dynamic update ----------
+    # ---------- DYNAMIC UPDATE ----------
 
     def update_clock(self):
         self.canvas.delete("dynamic")
 
         now = datetime.now()
         now_minutes = minutes_since_midnight(now)
+
+        # ----- Highlight current meal -----
         active_meal = None
         for minutes, label in self.meal_labels:
             if now_minutes >= minutes:
                 active_meal = label
-                self.canvas.itemconfig(
-                        label,
-                        font={"Serif", 10},
-                        fill=FADED_COLOR
-                        )
+
+            self.canvas.itemconfig(
+                label,
+                font=("Serif", 10),
+                fill=FADED_COLOR
+            )
 
         if active_meal:
             self.canvas.itemconfig(
-                    active_meal,
-                    font=("Serif", 14, "bold"),
-                    fill=INK_COLOR
-                    )
-    # ------ day progress hand --------
-        angle = (now_minutes / (24 * 60)) * 2 * math.pi - math.pi/2
+                active_meal,
+                font=("Serif", 14, "bold"),
+                fill=INK_COLOR
+            )
+
+        # ----- Day progress fill (midnight → now) -----
+        extent = (now_minutes / (24 * 60)) * 360
+
+        self.canvas.create_arc(
+            self.center - self.radius,
+            self.center - self.radius,
+            self.center + self.radius,
+            self.center + self.radius,
+            start=247,
+            extent=extent,
+            fill=FILL_COLOR,
+            outline="",
+            style=tk.PIESLICE,
+            tags="dynamic"
+        )
+
+        # ----- Day progress hand -----
+        angle = (now_minutes / (24 * 60)) * 2 * math.pi - math.pi / 2
 
         hx = self.center + self.radius * math.cos(angle)
         hy = self.center - self.radius * math.sin(angle)
@@ -135,19 +156,18 @@ class ShireClock:
                 )
         # center dot
         self.canvas.create_oval(
-                self.center - 4,
-                self.center -4,
-                self.center +4,
-                self.center +4,
-                fill=INK_COLOR,
-                outline="",
-                tags="dynamic"
-                )
+            self.center - 4,
+            self.center - 4,
+            self.center + 4,
+            self.center + 4,
+            fill=INK_COLOR,
+            outline="",
+            tags="dynamic"
+        )
 
         self.root.after(60000, self.update_clock)
-            
 
-# ------ run it
+# ------------------ RUN ------------------
 
 if __name__ == "__main__":
     root = tk.Tk()
